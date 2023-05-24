@@ -17,7 +17,7 @@ namespace NttSharp.Logic
             // Write the length of the 
             // array to the header and 
             // zero the dense length.
-            data[1] = data.Length;
+            data[1] = (data.Length - 2) / 2;
         }
 
 
@@ -110,12 +110,12 @@ namespace NttSharp.Logic
 
         public static int ResizeSet(ref int[] data, int size)
         {
-            Helpers.ResizeArray(ref data, size * 2, false);
+            Helpers.ResizeArray(ref data, (size + 2) * 2, false);
 
             // Apply the new size to the header
             // of the array while preserving
             // the length of the dense set.
-            return Write(data, -1, size - 1);
+            return Write(data, -1, size);
         }
 
         public static bool Contains(int[] ptr, int index)

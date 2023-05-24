@@ -4,5 +4,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Title>NttSharp</Title>
+    <Authors>NaturalDev</Authors>
+    <Description>An easy-to-use ecs library for C#.</Description>
+    <RepositoryUrl>https://github.com/Damonsoft/NttSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>csharp;game;ecs;entity component system;</PackageTags>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Constants\" />
+  </ItemGroup>
 </Project>

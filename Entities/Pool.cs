@@ -6,6 +6,8 @@ namespace NttSharp.Entities
 {
     public sealed unsafe class Pool
     {
+        public bool HasAny => Set.DenseLength is not 0;
+
         public readonly Type Type;
         public readonly int Unique;
         public readonly int Step;

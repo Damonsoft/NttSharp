@@ -1,5 +1,4 @@
 ﻿using NttSharp.Logic;
-using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace NttSharp.Collections
@@ -86,7 +85,7 @@ namespace NttSharp.Collections
         public readonly int SparseLength => Body[-1];
         public readonly int DenseLength => Body[-2];
 
-        public readonly int* Body;
+        internal readonly int* Body;
 
         internal readonly int[] Reference;
 
@@ -97,22 +96,13 @@ namespace NttSharp.Collections
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly DenseEnumerable EnumerateDense()
-        {
-            return new DenseEnumerable(Body);
-        }
+        public readonly DenseEnumerable EnumerateDense() => new DenseEnumerable(Body);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly bool IsWithinSparse(int index)
-        {
-            return index < Body[-1];
-        }
+        public readonly bool IsWithinSparse(int index) => index < Body[-1];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly bool IsWithinDense(int index)
-        {
-            return index < Body[-2];
-        }
+        public readonly bool IsWithinDense(int index) => index < Body[-2];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly bool Contains(int index)

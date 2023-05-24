@@ -35,7 +35,7 @@ namespace NttSharp.Entities
 
         public bool Contains(int entity) => entities.Contains(entity);
 
-        public void Add<T>(int entity, T initial) where T : unmanaged
+        public void Assign<T>(int entity, T initial) where T : unmanaged
         {
             int unique = TypeID<T>.Unique;
 
@@ -67,6 +67,11 @@ namespace NttSharp.Entities
                     }
                 }
             }
+        }
+
+        public ref T Get<T>(int entity) where T : unmanaged
+        {
+            return ref PoolEx.GetComponent<T>(GetPool<T>(), entity);
         }
 
         public DenseEnumerable AllEntites() => entities.EnumerateDense();
