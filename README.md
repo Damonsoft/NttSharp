@@ -16,34 +16,34 @@ This approach seperates individual pieces of 'objects' into components and encou
 using NttSharp.Entities;
 using NttSharp.Models;
 
-namespace Test.Console
+namespace NttSharp.Example.Console
 {
+    public struct Position
+    {
+        public int X;
+        public int Y;
+
+        public Position(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
+    public struct Velocity
+    {
+        public int X;
+        public int Y;
+
+        public Velocity(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
     public partial class Program
     {
-        public struct Position
-        {
-            public int X;
-            public int Y;
-
-            public Position(int x, int y)
-            {
-                X = x;
-                Y = y;
-            }
-        }
-
-        public struct Velocity
-        {
-            public int X;
-            public int Y;
-
-            public Velocity(int x, int y)
-            {
-                X = x;
-                Y = y;
-            }
-        }
-
         static void Main(string[] args)
         {
             World world = new World();
