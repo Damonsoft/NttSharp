@@ -1,9 +1,10 @@
 # Ntt# - An Entity Component System for C#
- A tiny, easy to use library for game development in C#.
- 
+`Ntt#` is a small library for creating games easily and efficiently without sparing any performance..<br/>
+
+## Code Example
+
 ```cs
 using NttSharp.Entities;
-using NttSharp.Extensions;
 using NttSharp.Models;
 
 namespace Test.Console
@@ -38,15 +39,15 @@ namespace Test.Console
         {
             World world = new World();
 
-            foreach(int offset in Enumerable.Range(0, 10))
+            foreach (int offset in Enumerable.Range(0, 10))
             {
                 int entity = world.Create();
 
-                world.Add(entity, new Position(offset, offset));
+                world.Assign(entity, new Position(offset, offset));
 
                 if (offset % 2 is 0)
                 {
-                    world.Add(entity, new Velocity(offset, offset));
+                    world.Assign(entity, new Velocity(offset, offset));
                 }
             }
 
@@ -62,7 +63,7 @@ namespace Test.Console
 
             View<Position, Velocity> view = world.View<Position, Velocity>();
 
-            foreach(var entity in view)
+            foreach (var entity in view)
             {
                 ref Position position = ref view.Get1(entity);
                 ref Velocity velocity = ref view.Get2(entity);
