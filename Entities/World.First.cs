@@ -68,6 +68,12 @@ namespace NttSharp.Entities
             return false;
         }
 
+        /// <summary>
+        /// Will return the first
+		/// entity that contains
+		/// the following components: 
+        /// <typeparamref name="A"/>.
+        /// </summary>
         public Single<A> First<A>() where A : unmanaged
 		{
 			Pool pool_a = GetPool<A>();
@@ -82,7 +88,14 @@ namespace NttSharp.Entities
 			throw new Exception();
 		}
 
-		public Single<A, B> First<A, B>()
+        /// <summary>
+        /// Will return the first
+        /// entity that contains
+        /// the following components: 
+        /// <typeparamref name="A"/>,
+		/// <typeparamref name="B"/>.
+        /// </summary>
+        public Single<A, B> First<A, B>()
 			where A : unmanaged
 			where B : unmanaged
 		{
@@ -100,7 +113,15 @@ namespace NttSharp.Entities
 			throw new Exception();
 		}
 
-		public Single<A, B, C> First<A, B, C>()
+        /// <summary>
+        /// Will return the first
+        /// entity that contains
+        /// the following components: 
+        /// <typeparamref name="A"/>,
+		/// <typeparamref name="B"/>,
+        /// <typeparamref name="C"/>.
+        /// </summary>
+        public Single<A, B, C> First<A, B, C>()
 			where A : unmanaged
 			where B : unmanaged
 			where C : unmanaged

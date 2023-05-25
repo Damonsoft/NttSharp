@@ -3,6 +3,10 @@ using NttSharp.Logic;
 
 namespace NttSharp.Entities
 {
+    /// <summary>
+    /// Provides methods to search, store, delete,
+    /// and modify both entities and their components.
+    /// </summary>
     public sealed partial class World
     {
         static int _unique = 0;
@@ -11,15 +15,23 @@ namespace NttSharp.Entities
         Pool[] pools = Array.Empty<Pool>();
         SparseSet entities = SparseSet.Create(512);
 
+        /// <summary>
+        /// Creates an empty entity.
+        /// </summary>
         public int Create()
         {
             int entity = _GetEntityId();
 
             SparseSet.Add(ref entities, entity);
-
+   
             return entity;
         }
 
+        /// <summary>
+        /// Deletes all components associated with an entity
+        /// then recycles the entity id.
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         public void Destroy(int entity)
         {
             if (entities.Contains(entity))
@@ -32,8 +44,20 @@ namespace NttSharp.Entities
             }
         }
 
+
+        /// <summary>
+        /// Checks if the entity is valid.
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         public bool Contains(int entity) => entities.Contains(entity);
 
+        /// <summary>
+        /// Assigns a component of type
+        /// <typeparamref name="T"/>
+        /// to an entity.
+        /// </summary>
+        /// <param name="entity">the entity id</param>
+        /// <param name="initial">the initial value of the component</param>
         public void Assign<T>(int entity, T initial) where T : unmanaged
         {
             int unique = TypeID<T>.Unique;
@@ -47,11 +71,22 @@ namespace NttSharp.Entities
             pools[unique].AddComponent(entity, in initial);
         }
 
+        /// <summary>
+        /// Removes a component of type
+        /// <typeparamref name="T"/>
+        /// from an entity.
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         public void Remove<T>(int entity) where T : unmanaged
         {
             pools[TypeID<T>.Unique].RemoveComponent(entity);
         }
 
+        /// <summary>
+        /// Removes all components
+        /// from an entity.
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         public void RemoveAll(int entity)
         {
             for (int y = 0; y < pools.Length; y++)
@@ -68,11 +103,21 @@ namespace NttSharp.Entities
             }
         }
 
+        /// <summary>
+        /// Retrieves a reference
+        /// to a component of type
+        /// <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         public ref T Get<T>(int entity) where T : unmanaged
         {
             return ref GetPool<T>().GetComponent<T>(entity);
         }
 
+        /// <summary>
+        /// Returns an enumeration of
+        /// all entities registered.
+        /// </summary>
         public DenseEnumerable AllEntites() => entities.EnumerateDense();
 
         internal Pool GetPool<T>() where T : unmanaged

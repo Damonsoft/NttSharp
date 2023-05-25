@@ -33,17 +33,15 @@ namespace NttSharp.Entities
 
         public unsafe void AddComponent<T>(int entity, in T value) where T : unmanaged
         {
-            Debug.Assert(typeof(T).IsEquivalentTo(NetType), "Requested component type doesn't match the pools!");
-
-            ref SparseSet map = ref Map;
+            Debug.Assert(typeof(T).IsEquivalentTo(NetType), $"Requested component type must be of type {typeof(T).FullName}");
 
             // Check if the set contains
             // the value already.
-            if (!map.Contains(entity))
+            if (!Map.Contains(entity))
             {
                 // Add a new bi-directional
                 // reference to an entity.
-                int offset = SparseSet.Add(ref map, entity) * sizeof(T);
+                int offset = SparseSet.Add(ref Map, entity) * sizeof(T);
 
                 // Check if the length of
                 // the components is longer
@@ -63,7 +61,7 @@ namespace NttSharp.Entities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ref T GetComponent<T>(int entity) where T : unmanaged
         {
-            Debug.Assert(typeof(T).IsEquivalentTo(NetType), "Requested component type doesn't match the pools!");
+            Debug.Assert(typeof(T).IsEquivalentTo(NetType), $"Requested component type must be of type {typeof(T).FullName}");
 
             return ref Component.GetComponent<T>(entity, in Map, in Bytes);
         }
@@ -71,19 +69,17 @@ namespace NttSharp.Entities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetComponent<T>(int entity, in T value) where T : unmanaged
         {
-            Debug.Assert(typeof(T).IsEquivalentTo(NetType), "Requested component type doesn't match the pools!");
+            Debug.Assert(typeof(T).IsEquivalentTo(NetType), $"Requested component type must be of type {typeof(T).FullName}");
 
             Component.SetComponent(entity, in value, in Map, in Bytes);
         }
 
         public void RemoveComponent(int entity)
         {
-            ref SparseSet set = ref Map;
-
-            if (set.Contains(entity))
+            if (Map.Contains(entity))
             {
-                int offset = set.GetSparse(entity);
-                int length = set.DenseLength - offset - 1;
+                int offset = Map.GetSparse(entity);
+                int length = Map.DenseLength - offset - 1;
 
                 for (int i = 0; i < length; i++)
                 {
@@ -91,7 +87,7 @@ namespace NttSharp.Entities
                     int target = offset + i;
                     Bytes.CopyWithin(source * ItemSize, target * ItemSize, ItemSize);
                 }
-                SparseSet.Remove(set, entity);
+                SparseSet.Remove(Map, entity);
             }
         }
 

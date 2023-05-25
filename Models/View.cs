@@ -180,6 +180,12 @@ namespace NttSharp.Models
             this.pool_a = pool_a;
         }
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="A"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
         public View_Enumerator1 GetEnumerator() => new View_Enumerator1(0, pool_a);
@@ -198,9 +204,21 @@ namespace NttSharp.Models
             this.pool_b = pool_b;
         }
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="A"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="B"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
 
@@ -223,12 +241,30 @@ namespace NttSharp.Models
             this.pool_c = pool_c;
         }
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="A"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="B"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="C"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
 
@@ -254,15 +290,39 @@ namespace NttSharp.Models
             this.pool_d = pool_d;
         }
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="A"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="B"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="C"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
 
+        /// <summary>
+        /// Gets a reference to
+        /// the component of type: 
+        /// <typeparamref name="D"/>,
+        /// </summary>
+        /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref D Get4(int entity) => ref Component.GetComponent<D>(entity, in pool_d.Map, in pool_d.Bytes);
 
