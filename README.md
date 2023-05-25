@@ -1,5 +1,14 @@
 # Ntt# - An Entity Component System for C#
-`Ntt#` is a small library for creating games easily and efficiently without sparing any performance..<br/>
+
+`Ntt#` is a small library for creating games easily and efficiently without sparing performance.<br/>
+
+## Introdutction
+
+Traditionally in game development the inheritance route is what most developers go for when desiging their master-pieces.
+This approach, while solid, comes with many caveats that can heavily impact the performance and stability of games and programs alike.
+With this in mind developers have been experimenting with new ways to build their game logic that can meet the high performance and stability requirments of today's games.
+One of those many approaches is the entity-component-system (shorthand _ECS_), which is a pattern that favors a individual components over object inheritance.
+This approach seperates individual pieces of 'objects' into components and encourages a more dynamic yet performant way of structuring game data.</br>
 
 ## Code Example
 
