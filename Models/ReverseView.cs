@@ -1,5 +1,4 @@
 ﻿using NttSharp.Entities;
-using NttSharp.Extensions;
 using NttSharp.Logic;
 
 namespace NttSharp.Models
@@ -21,7 +20,7 @@ namespace NttSharp.Models
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = PoolEx.GetBody(pool_a);
+            int* ptr_a = pool_a.Map.Body;
 
             while (index < Dense.GetLength(ptr_a))
             {
@@ -52,8 +51,8 @@ namespace NttSharp.Models
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = PoolEx.GetBody(pool_a);
-            int* ptr_b = PoolEx.GetBody(pool_b);
+            int* ptr_a = pool_a.Map.Body;
+            int* ptr_b = pool_b.Map.Body;
 
             while (index < Dense.GetLength(ptr_a))
             {
@@ -89,9 +88,9 @@ namespace NttSharp.Models
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = PoolEx.GetBody(pool_a);
-            int* ptr_b = PoolEx.GetBody(pool_b);
-            int* ptr_c = PoolEx.GetBody(pool_c);
+            int* ptr_a = pool_a.Map.Body;
+            int* ptr_b = pool_b.Map.Body;
+            int* ptr_c = pool_c.Map.Body;
 
             while (index < Dense.GetLength(ptr_a))
             {
@@ -130,10 +129,10 @@ namespace NttSharp.Models
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = PoolEx.GetBody(pool_a);
-            int* ptr_b = PoolEx.GetBody(pool_b);
-            int* ptr_c = PoolEx.GetBody(pool_c);
-            int* ptr_d = PoolEx.GetBody(pool_d);
+            int* ptr_a = pool_a.Map.Body;
+            int* ptr_b = pool_b.Map.Body;
+            int* ptr_c = pool_c.Map.Body;
+            int* ptr_d = pool_d.Map.Body;
 
             while (index < Dense.GetLength(ptr_a))
             {
@@ -159,9 +158,9 @@ namespace NttSharp.Models
             this.pool_a = pool_T;
         }
 
-        public readonly ref A Get1(int entity) => ref Component.GetComponent(entity, pool_a.Set, pool_a.Count, (A*)pool_a.BytePtr);
+        public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
 
-        public View_Enumerator1 GetEnumerator() => new View_Enumerator1(0, pool_a);
+        public ReverseView_Enumerator1 GetEnumerator() => new ReverseView_Enumerator1(0, pool_a);
     }
 
     public readonly unsafe struct ReverseView<A, B>
@@ -179,10 +178,10 @@ namespace NttSharp.Models
             this.pool_b = pool_b;
         }
 
-        public readonly ref A Get1(int entity) => ref Component.GetComponent(entity, pool_a.Set, pool_a.Count, (A*)pool_a.BytePtr);
-        public readonly ref B Get2(int entity) => ref Component.GetComponent(entity, pool_b.Set, pool_b.Count, (B*)pool_b.BytePtr);
+        public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
+        public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
 
-        public View_Enumerator2 GetEnumerator() => new View_Enumerator2(0, pool_a, pool_b);
+        public ReverseView_Enumerator2 GetEnumerator() => new ReverseView_Enumerator2(0, pool_a, pool_b);
     }
 
     public readonly unsafe struct ReverseView<A, B, C>
@@ -204,10 +203,10 @@ namespace NttSharp.Models
             this.pool_c = pool_c;
         }
 
-        public readonly ref A Get1(int entity) => ref Component.GetComponent(entity, pool_a.Set, pool_a.Count, (A*)pool_a.BytePtr);
-        public readonly ref B Get2(int entity) => ref Component.GetComponent(entity, pool_b.Set, pool_b.Count, (B*)pool_b.BytePtr);
-        public readonly ref C Get3(int entity) => ref Component.GetComponent(entity, pool_c.Set, pool_c.Count, (C*)pool_c.BytePtr);
-        public View_Enumerator3 GetEnumerator() => new View_Enumerator3(0, pool_a, pool_b, pool_c);
+        public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
+        public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
+        public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
+        public ReverseView_Enumerator3 GetEnumerator() => new ReverseView_Enumerator3(0, pool_a, pool_b, pool_c);
     }
 
     public readonly unsafe struct ReverseView<A, B, C, D>
@@ -233,11 +232,11 @@ namespace NttSharp.Models
             this.pool_d = pool_d;
         }
 
-        public readonly ref A Get1(int entity) => ref Component.GetComponent(entity, pool_a.Set, pool_a.Count, (A*)pool_a.BytePtr);
-        public readonly ref B Get2(int entity) => ref Component.GetComponent(entity, pool_b.Set, pool_b.Count, (B*)pool_b.BytePtr);
-        public readonly ref C Get3(int entity) => ref Component.GetComponent(entity, pool_c.Set, pool_c.Count, (C*)pool_c.BytePtr);
-        public readonly ref D Get4(int entity) => ref Component.GetComponent(entity, pool_d.Set, pool_d.Count, (D*)pool_d.BytePtr);
+        public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
+        public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
+        public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
+        public readonly ref D Get4(int entity) => ref Component.GetComponent<D>(entity, in pool_d.Map, in pool_d.Bytes);
 
-        public View_Enumerator4 GetEnumerator() => new View_Enumerator4(0, pool_a, pool_b, pool_c, pool_d);
+        public ReverseView_Enumerator4 GetEnumerator() => new ReverseView_Enumerator4(0, pool_a, pool_b, pool_c, pool_d);
     }
 }

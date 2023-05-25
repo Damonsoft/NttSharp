@@ -1,15 +1,14 @@
-﻿using NttSharp.Extensions;
-using NttSharp.Models;
+﻿using NttSharp.Models;
 
 namespace NttSharp.Entities
 {
-    public static class WorldFirst
+    public sealed partial class World
     {
-        public static bool TryFirst<A>(this World world, out Single<A> result) where A : unmanaged
+        public bool TryFirst<A>(out Single<A> result) where A : unmanaged
 		{
-			Pool pool_a = world.GetPool<A>();
+			Pool pool_a = GetPool<A>();
 
-			foreach(int entity in world.AllEntites())
+			foreach(int entity in AllEntites())
 			{
 				if (pool_a.Contains(entity))
 				{
@@ -23,14 +22,14 @@ namespace NttSharp.Entities
 			return false;
 		}
 
-        public static bool TryFirst<A, B>(this World world, out Single<A, B> result)
+        public bool TryFirst<A, B>(out Single<A, B> result)
 			where A : unmanaged
 			where B : unmanaged
 		{
-			Pool pool_a = world.GetPool<A>();
-			Pool pool_b = world.GetPool<B>();
+			Pool pool_a = GetPool<A>();
+			Pool pool_b = GetPool<B>();
 
-			foreach (int entity in world.AllEntites())
+			foreach (int entity in AllEntites())
 			{
 				if (pool_a.Contains(entity) &&
 					pool_b.Contains(entity))
@@ -45,16 +44,16 @@ namespace NttSharp.Entities
 			return false;
 		}
 
-        public static bool TryFirst<A, B, C>(this World world, out Single<A, B, C> result)
+        public bool TryFirst<A, B, C>(out Single<A, B, C> result)
 			where A : unmanaged
 			where B : unmanaged
             where C : unmanaged
         {
-            Pool pool_a = world.GetPool<A>();
-            Pool pool_b = world.GetPool<B>();
-			Pool pool_c = world.GetPool<C>();
+            Pool pool_a = GetPool<A>();
+            Pool pool_b = GetPool<B>();
+			Pool pool_c = GetPool<C>();
 
-            foreach (int entity in world.AllEntites())
+            foreach (int entity in AllEntites())
             {
                 if (pool_a.Contains(entity) &&
                     pool_b.Contains(entity))
@@ -69,11 +68,11 @@ namespace NttSharp.Entities
             return false;
         }
 
-        public static Single<A> First<A>(this World world) where A : unmanaged
+        public Single<A> First<A>() where A : unmanaged
 		{
-			Pool pool_a = world.GetPool<A>();
+			Pool pool_a = GetPool<A>();
 
-			foreach (int entity in world.AllEntites())
+			foreach (int entity in AllEntites())
 			{
 				if (pool_a.Contains(entity))
 				{
@@ -83,14 +82,14 @@ namespace NttSharp.Entities
 			throw new Exception();
 		}
 
-		public static Single<A, B> First<A, B>(this World world)
+		public Single<A, B> First<A, B>()
 			where A : unmanaged
 			where B : unmanaged
 		{
-			Pool pool_a = world.GetPool<A>();
-			Pool pool_b = world.GetPool<B>();
+			Pool pool_a = GetPool<A>();
+			Pool pool_b = GetPool<B>();
 
-			foreach (int entity in world.AllEntites())
+			foreach (int entity in AllEntites())
 			{
 				if (pool_a.Contains(entity) &&
 					pool_b.Contains(entity))
@@ -101,16 +100,16 @@ namespace NttSharp.Entities
 			throw new Exception();
 		}
 
-		public static Single<A, B, C> First<A, B, C>(this World world)
+		public Single<A, B, C> First<A, B, C>()
 			where A : unmanaged
 			where B : unmanaged
 			where C : unmanaged
 		{
-			Pool pool_a = world.GetPool<A>();
-			Pool pool_b = world.GetPool<B>();
-			Pool pool_c = world.GetPool<C>();
+			Pool pool_a = GetPool<A>();
+			Pool pool_b = GetPool<B>();
+			Pool pool_c = GetPool<C>();
 
-			foreach (int entity in world.AllEntites())
+			foreach (int entity in AllEntites())
 			{
 				if (pool_a.Contains(entity) &&
 					pool_b.Contains(entity) &&

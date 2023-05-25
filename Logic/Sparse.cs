@@ -36,21 +36,22 @@ namespace NttSharp.Logic
         {
             if (Contains(data, index))
             {
-                int start = Get(data, index);
+                int start = Sparse.Get(data, index);
                 int length = Dense.GetLength(data) - start - 1;
+
+                Dense.SetUnsafe(data, start, 0);
+                Sparse.SetUnsafe(data, index, 0);
 
                 for (int i = 0; i < length; i++)
                 {
                     int next = Dense.Get(data, start + i + 1);
 
-                    SetUnsafe(data, next, start + i);
+                    Sparse.SetUnsafe(data, next, start + i);
                     Dense.SetUnsafe(data, start + i, next);
                 }
                 int old_length = Dense.GetLength(data); ;
 
-                SetUnsafe(data, index, 0);
                 Dense.SetUnsafe(data, old_length - 1, 0);
-
                 Dense.SetLength(data, old_length - 1);
 
                 return;
@@ -110,7 +111,7 @@ namespace NttSharp.Logic
 
         public static int ResizeSet(ref int[] data, int size)
         {
-            Helpers.ResizeArray(ref data, (size + 2) * 2, false);
+            Helpers.ResizeArray(ref data, (size + 2) * 2, true);
 
             // Apply the new size to the header
             // of the array while preserving

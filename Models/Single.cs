@@ -1,5 +1,5 @@
 ﻿using NttSharp.Entities;
-using NttSharp.Extensions;
+using System.Runtime.CompilerServices;
 
 namespace NttSharp.Models
 {
@@ -17,9 +17,9 @@ namespace NttSharp.Models
             this.pool_a = pool_a;
         }
 
-        public readonly ref A Get1() => ref PoolEx.GetComponent<A>(pool_a, entity);
+        public readonly ref A Get1() => ref pool_a.GetComponent<A>(entity);
 
-        public readonly void Set1(in A value) => PoolEx.WriteComponent(pool_a, entity, in value);
+        public readonly void Set1(in A value) => pool_a.SetComponent(entity, in value);
     }
 
     public readonly struct Single<A, B>
@@ -39,11 +39,11 @@ namespace NttSharp.Models
             this.pool_b = pool_b;
         }
 
-        public readonly ref A Get1() => ref PoolEx.GetComponent<A>(pool_a, entity);
-        public readonly ref B Get2() => ref PoolEx.GetComponent<B>(pool_b, entity);
+        public readonly ref A Get1() => ref pool_a.GetComponent<A>(entity);
+        public readonly ref B Get2() => ref pool_b.GetComponent<B>(entity);
 
-        public readonly void Set1(in A value) => PoolEx.WriteComponent(pool_a, entity, in value);
-        public readonly void Set2(in B value) => PoolEx.WriteComponent(pool_b, entity, in value);
+        public readonly void Set1(in A value) => pool_a.SetComponent(entity, in value);
+        public readonly void Set2(in B value) => pool_b.SetComponent(entity, in value);
     }
 
     public readonly struct Single<A, B, C>
@@ -64,13 +64,18 @@ namespace NttSharp.Models
             this.pool_c = pool_b;
         }
 
-        public readonly ref A Get1() => ref PoolEx.GetComponent<A>(pool_a, entity);
-        public readonly ref B Get2() => ref PoolEx.GetComponent<B>(pool_b, entity);
-        public readonly ref C Get3() => ref PoolEx.GetComponent<C>(pool_c, entity);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly ref A Get1() => ref pool_a.GetComponent<A>(entity);
 
-        public readonly void Set1(in A value) => PoolEx.WriteComponent(pool_a, entity, in value);
-        public readonly void Set2(in B value) => PoolEx.WriteComponent(pool_b, entity, in value);
-        public readonly void Set3(in C value) => PoolEx.WriteComponent(pool_c, entity, in value);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly ref B Get2() => ref pool_b.GetComponent<B>(entity);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly ref C Get3() => ref pool_c.GetComponent<C>(entity);
+
+        public readonly void Set1(in A value) => pool_a.SetComponent(entity, in value);
+        public readonly void Set2(in B value) => pool_b.SetComponent(entity, in value);
+        public readonly void Set3(in C value) => pool_c.SetComponent(entity, in value);
     }
 
     public readonly struct Single<A, B, C, D>
@@ -94,15 +99,15 @@ namespace NttSharp.Models
             this.pool_d = pool_d;
         }
 
-        public readonly ref A Get1() => ref PoolEx.GetComponent<A>(pool_a, entity);
-        public readonly ref B Get2() => ref PoolEx.GetComponent<B>(pool_b, entity);
-        public readonly ref C Get3() => ref PoolEx.GetComponent<C>(pool_c, entity);
-        public readonly ref D Get4() => ref PoolEx.GetComponent<D>(pool_d, entity);
+        public readonly ref A Get1() => ref pool_a.GetComponent<A>(entity);
+        public readonly ref B Get2() => ref pool_b.GetComponent<B>(entity);
+        public readonly ref C Get3() => ref pool_c.GetComponent<C>(entity);
+        public readonly ref D Get4() => ref pool_d.GetComponent<D>(entity);
 
-        public readonly void Set1(in A value) => PoolEx.WriteComponent(pool_a, entity, in value);
-        public readonly void Set2(in B value) => PoolEx.WriteComponent(pool_b, entity, in value);
-        public readonly void Set3(in C value) => PoolEx.WriteComponent(pool_c, entity, in value);
-        public readonly void Set4(in D value) => PoolEx.WriteComponent(pool_d, entity, in value);
+        public readonly void Set1(in A value) => pool_a.SetComponent(entity, in value);
+        public readonly void Set2(in B value) => pool_b.SetComponent(entity, in value);
+        public readonly void Set3(in C value) => pool_c.SetComponent(entity, in value);
+        public readonly void Set4(in D value) => pool_d.SetComponent(entity, in value);
 
     }
 }

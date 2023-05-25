@@ -151,6 +151,10 @@ namespace NttSharp.Collections
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly DenseWrap WrapDense() => new DenseWrap(&Body[-2]);
 
+#if DEBUG
+        public readonly bool IsBody(int* pointer) => (int*)Unsafe.AsPointer(ref Reference[2]) == pointer;
+#endif
+
         public static SparseSet Create(int length)
         {
             int[] set = Sparse.Create(length, true);
@@ -164,10 +168,8 @@ namespace NttSharp.Collections
 
             int result = Sparse.Add(ref array, offset);
 
-            if (array != set.Reference)
-            {
-                set = new SparseSet((int*)Unsafe.AsPointer(ref array[2]), array);
-            }
+            set = new SparseSet((int*)Unsafe.AsPointer(ref array[2]), array);
+
             return result;
         }
 
@@ -184,6 +186,9 @@ namespace NttSharp.Collections
             // the pinned aspect of the next array.
             Helpers.ResizeArray(ref _internal, length, pinned: true);
 
+#if DEBUG
+            Array.Fill(_internal, 0x0dead); 
+#endif
             // Write the new length of the
             // array to the header of the
             // buffer while preserving the

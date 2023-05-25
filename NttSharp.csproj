@@ -13,7 +13,4 @@
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Constants\" />
-  </ItemGroup>
 </Project>

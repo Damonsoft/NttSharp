@@ -1,5 +1,4 @@
 ﻿using NttSharp.Collections;
-using NttSharp.Extensions;
 using NttSharp.Logic;
 
 namespace NttSharp.Entities
@@ -43,14 +42,14 @@ namespace NttSharp.Entities
             {
                 Array.Resize(ref pools, unique + 1);
 
-                pools[unique] = Pool.Create<T>(256);
+                pools[unique] = Pool.Create<T>(32);
             }
-            PoolEx.AddComponent(pools[unique], entity, initial);
+            pools[unique].AddComponent(entity, in initial);
         }
 
         public void Remove<T>(int entity) where T : unmanaged
         {
-            PoolEx.RemoveComponent(pools[TypeID<T>.Unique], entity);
+            pools[TypeID<T>.Unique].RemoveComponent(entity);
         }
 
         public void RemoveAll(int entity)
@@ -63,7 +62,7 @@ namespace NttSharp.Entities
                 {
                     if (pool.Contains(entity))
                     {
-                        PoolEx.RemoveComponent(pool, entity);
+                        pool.RemoveComponent(entity);
                     }
                 }
             }
@@ -71,7 +70,7 @@ namespace NttSharp.Entities
 
         public ref T Get<T>(int entity) where T : unmanaged
         {
-            return ref PoolEx.GetComponent<T>(GetPool<T>(), entity);
+            return ref GetPool<T>().GetComponent<T>(entity);
         }
 
         public DenseEnumerable AllEntites() => entities.EnumerateDense();

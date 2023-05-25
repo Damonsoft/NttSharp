@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using NttSharp.Collections;
 
 namespace NttSharp.Logic
@@ -6,33 +7,21 @@ namespace NttSharp.Logic
     public static unsafe class Component
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IntPtr GetComponent(SparseSet set, int entity, byte[] bytes, int step)
+        public static void SetComponent<T>(int entity, in T value, in SparseSet set, in NativeBytes bytes) where T : unmanaged
         {
-            return new IntPtr(Unsafe.AsPointer(ref bytes[set.GetSparse(entity) * step]));
+#if DEBUG
+            Debug.Assert(set.Contains(entity), "Set already contain the entity!");
+#endif
+            bytes.Write(set.GetSparse(entity) * sizeof(T), in value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref T GetComponent<T>(SparseSet set, int entity, byte[] bytes) where T : unmanaged
+        public static ref T GetComponent<T>(int entity, in SparseSet set, in NativeBytes bytes) where T : unmanaged
         {
-            return ref ((T*)Unsafe.AsPointer(ref bytes[0]))[set.GetSparse(entity)];
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetComponent<T>(SparseSet set, int entity, byte[] bytes, in T value) where T : unmanaged
-        {
-            ((T*)Unsafe.AsPointer(ref bytes[0]))[set.GetSparse(entity)] = value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref T GetComponent<T>(int entity, SparseSet set, int count, T* bytes) where T : unmanaged
-        {
-            int index = set.GetSparse(entity);
-
-            if (index < count)
-            {
-                return ref bytes[index];
-            }
-            return ref Unsafe.AsRef<T>((void*)0);
+#if DEBUG
+            Debug.Assert(set.Contains(entity), "Set doesn't contain the entity!");
+#endif
+            return ref bytes.Ref<T>(set.GetSparse(entity) * sizeof(T));
         }
     }
 }
