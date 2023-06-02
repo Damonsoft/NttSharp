@@ -2,7 +2,6 @@
 
 namespace NttSharp.Entities
 {
-
     public sealed partial class World
     {
         /// <summary>
@@ -13,7 +12,7 @@ namespace NttSharp.Entities
         /// </summary>
         public View<A> View<A>() where A : unmanaged
         {
-            Pool pool = GetPool<A>();
+            ref Pool pool = ref GetPool<A>();
 
             return new View<A>(pool);
         }
@@ -30,8 +29,8 @@ namespace NttSharp.Entities
             where A : unmanaged
             where B : unmanaged
         {
-            Pool pool_a = GetPool<A>();
-            Pool pool_b = GetPool<B>();
+            ref Pool pool_a = ref GetPool<A>();
+            ref Pool pool_b = ref GetPool<B>();
 
             return new View<A, B>(pool_a, pool_b);
         }
@@ -50,11 +49,11 @@ namespace NttSharp.Entities
             where B : unmanaged
             where C : unmanaged
         {
-            Pool pool_a = GetPool<A>();
-            Pool pool_b = GetPool<B>();
-            Pool pool_c = GetPool<C>();
+            ref Pool pool_a = ref GetPool<A>();
+            ref Pool pool_b = ref GetPool<B>();
+            ref Pool pool_c = ref GetPool<C>();
 
-            return new View<A, B, C>(pool_a, pool_b, pool_c);
+            return new View<A, B, C>(in pool_a, in pool_b, in pool_c);
         }
 
         /// <summary>
@@ -73,10 +72,10 @@ namespace NttSharp.Entities
             where C : unmanaged
             where D : unmanaged
         {
-            Pool pool_a = GetPool<A>();
-            Pool pool_b = GetPool<B>();
-            Pool pool_c = GetPool<C>();
-            Pool pool_d = GetPool<D>();
+            ref Pool pool_a = ref GetPool<A>();
+            ref Pool pool_b = ref GetPool<B>();
+            ref Pool pool_c = ref GetPool<C>();
+            ref Pool pool_d = ref GetPool<D>();
 
             return new View<A, B, C, D>(pool_a, pool_b, pool_c, pool_d);
         }

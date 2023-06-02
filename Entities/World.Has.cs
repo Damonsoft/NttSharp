@@ -26,7 +26,7 @@ namespace NttSharp.Entities
 
             if (pool is not null)
             {
-                return pool.Contains(entity);
+                return pool.Value.Contains(entity);
             }
             return false;
         }
@@ -47,7 +47,7 @@ namespace NttSharp.Entities
             if (pool_a is null) return false;
             Pool? pool_b = TryGetPool<B>();
             if (pool_b is null) return false;
-            return pool_a.Contains(entity) || pool_b.Contains(entity);
+            return pool_a.Value.Contains(entity) || pool_b.Value.Contains(entity);
         }
 
         /// <summary>
@@ -55,10 +55,7 @@ namespace NttSharp.Entities
         /// contains any of the
         /// components types:
         /// <typeparamref name="A"/>,
-        /// <typeparamref name="B"/>,
-        /// <typeparamref name="C"/>.
-        /// </summary>
-        /// <param name="entity">the entity id</param>
+        /// <typeparamref name="B"/>,    /// <param name="entity">the entity id</param>
         public bool HasAny<A, B, C>(int entity)
             where A : unmanaged
             where B : unmanaged
@@ -71,9 +68,9 @@ namespace NttSharp.Entities
             Pool? pool_c = TryGetPool<C>();
             if (pool_c is null) return false;
             return
-                pool_a.Contains(entity) ||
-                pool_b.Contains(entity) ||
-                pool_c.Contains(entity);
+                pool_a.Value.Contains(entity) ||
+                pool_b.Value.Contains(entity) ||
+                pool_c.Value.Contains(entity);
         }
 
 
@@ -102,10 +99,10 @@ namespace NttSharp.Entities
             Pool? pool_d = TryGetPool<C>();
             if (pool_d is null) return false;
             return
-                pool_a.Contains(entity) ||
-                pool_b.Contains(entity) ||
-                pool_c.Contains(entity) ||
-                pool_d.Contains(entity);
+                pool_a.Value.Contains(entity) ||
+                pool_b.Value.Contains(entity) ||
+                pool_c.Value.Contains(entity) ||
+                pool_d.Value.Contains(entity);
         }
 
         /// <summary>

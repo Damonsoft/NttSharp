@@ -157,7 +157,9 @@ namespace NttSharp.Collections
 
         public static SparseSet Create(int length)
         {
-            int[] set = Sparse.Create(length, true);
+            int[] set = GC.AllocateArray<int>(length, pinned: true);
+
+            Sparse.Init(set);
 
             return new SparseSet((int*)Unsafe.AsPointer(ref set[2]), set);
         }

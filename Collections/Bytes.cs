@@ -4,14 +4,14 @@ using System.Runtime.CompilerServices;
 
 namespace NttSharp.Collections
 {
-    public unsafe readonly struct NativeBytes
+    public unsafe readonly struct Bytes
     {
         public readonly int Capacity => Reference.Length;
 
         internal readonly byte* Pointer;
         internal readonly byte[] Reference;
 
-        private NativeBytes(byte* pointer, byte[] reference)
+        private Bytes(byte* pointer, byte[] reference)
         {
             Pointer = pointer;
             Reference = reference;
@@ -63,18 +63,18 @@ namespace NttSharp.Collections
             Buffer.MemoryCopy(&Pointer[source], &Pointer[target], Reference.Length - length, length);
         }
 
-        public static NativeBytes Allocate(int length)
+        public static Bytes Allocate(int length)
         {
             byte[] bytes = GC.AllocateArray<byte>(length, pinned: true);
 
-            return new NativeBytes((byte*)Unsafe.AsPointer(ref bytes[0]), bytes);
+            return new Bytes((byte*)Unsafe.AsPointer(ref bytes[0]), bytes);
         }
 
-        public static void Resize(ref NativeBytes bytes, int size)
+        public static void Resize(ref Bytes bytes, int size)
         {
             byte[] temp = Helpers.ResizeArray(bytes.Reference, size, pinned: true);
 
-            bytes = new NativeBytes((byte*)Unsafe.AsPointer(ref temp[0]), temp);
+            bytes = new Bytes((byte*)Unsafe.AsPointer(ref temp[0]), temp);
         }
     }
 }

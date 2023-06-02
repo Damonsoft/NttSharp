@@ -5,13 +5,7 @@ namespace NttSharp.Logic
 {
     public static unsafe partial class Sparse
     {
-        public static int[] Create(int capacity, bool pinned)
-        {
-            int[] data = GC.AllocateArray<int>(capacity, pinned);
-            Init(data);
-            return data;
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Init(Span<int> data)
         {
             // Write the length of the 
@@ -24,14 +18,10 @@ namespace NttSharp.Logic
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Add(ref int[] data, int offset)
         {
-            //
-            int dense = Dense.Add(ref data, offset);
-            //
-            Set(ref data, offset, dense);
-            //
-            return dense;
+            return Set(ref data, offset, Dense.Add(ref data, offset));
         }
 
+        // TO DO: convert to using pointers
         public static void Remove(int[] data, int index)
         {
             if (Contains(data, index))
@@ -86,7 +76,7 @@ namespace NttSharp.Logic
 
                 return Set(ref set, offset, value);
             }
-            Debug.Assert(offset + 1 < set.Length);
+            Debug.Assert(offset < set.Length);
 
             return Write(set, offset, value);
         }
@@ -97,14 +87,14 @@ namespace NttSharp.Logic
             {
                 throw new Exception();
             }
-            Debug.Assert(offset + 1 < set.Length);
+            Debug.Assert(offset < set.Length);
 
             return Write(set, offset, value);
         }
 
         public static int SetUnsafe(int[] set, int offset, int value)
         {
-            Debug.Assert(offset + 1 < set.Length);
+            Debug.Assert(offset < set.Length);
 
             return Write(set, offset, value);
         }
@@ -145,10 +135,8 @@ namespace NttSharp.Logic
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe bool Contains(int* ptr, int index)
         {
-            //
             if (index >= ptr[-1]) return false;
 
-            //
             return ptr[ptr[index * 2 + 1] * 2] == index;
         }
     }

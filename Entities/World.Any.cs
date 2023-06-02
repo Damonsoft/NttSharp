@@ -6,7 +6,7 @@
         {
             Pool? pool = TryGetPool<A>();
             if (pool == null) return false;
-            return pool.HasAny;
+            return pool.Value.HasAny;
         }
     }
 }

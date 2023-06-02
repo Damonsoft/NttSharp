@@ -12,7 +12,7 @@ namespace NttSharp.Entities
         static int _unique = 0;
 
         List<int> free = new List<int>();
-        Pool[] pools = Array.Empty<Pool>();
+        Chunker<Pool> pools = Chunker<Pool>.Create(32);
         SparseSet entities = SparseSet.Create(512);
 
         /// <summary>
@@ -60,15 +60,13 @@ namespace NttSharp.Entities
         /// <param name="initial">the initial value of the component</param>
         public void Assign<T>(int entity, T initial) where T : unmanaged
         {
-            int unique = TypeID<T>.Unique;
+            ref Pool pool = ref pools[Chunker<Pool>.Ensure(ref pools, TypeID<T>.Unique)];
 
-            if (pools.Length <= unique)
-            {
-                Array.Resize(ref pools, unique + 1);
-
-                pools[unique] = Pool.Create<T>(32);
+            if (pool.NetType is null)
+            { 
+                pool = Pool.Create<T>(32);
             }
-            pools[unique].AddComponent(entity, in initial);
+            pool.AddComponent(entity, in initial);
         }
 
         /// <summary>
@@ -91,9 +89,9 @@ namespace NttSharp.Entities
         {
             for (int y = 0; y < pools.Length; y++)
             {
-                Pool? pool = pools[y];
+                Pool pool = pools[y];
 
-                if (pool is not null)
+                if (pool.NetType is not null)
                 {
                     if (pool.Contains(entity))
                     {
@@ -120,17 +118,24 @@ namespace NttSharp.Entities
         /// </summary>
         public DenseEnumerable AllEntites() => entities.EnumerateDense();
 
-        internal Pool GetPool<T>() where T : unmanaged
+        /// <summary>
+        /// Registers a type with
+        /// the world. 
+        /// </summary>
+        public void Register<T>() where T : unmanaged => GetPool<T>();
+
+
+        internal ref Pool GetPool<T>() where T : unmanaged
         {
-            int unique = TypeID<T>.Unique;
+            int unique = Chunker<Pool>.Ensure(ref pools, TypeID<T>.Unique);
 
-            if (unique >= pools.Length)
+            if (pools[unique].NetType is null)
             {
-                Array.Resize(ref pools, unique + 1);
+                Chunker<Pool>.Resize(ref pools, unique + 1);
 
-                return pools[unique] = Pool.Create<T>(512);
+                pools[unique] = Pool.Create<T>(512);
             }
-            return pools[unique];
+            return ref pools[unique];
         }
 
         internal Pool? TryGetPool<T>() where T : unmanaged

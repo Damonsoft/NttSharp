@@ -1,34 +1,30 @@
 ﻿using NttSharp.Entities;
 using NttSharp.Logic;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace NttSharp.Models
 {
-    public struct View_Enumerator1
+    public unsafe ref struct View_Enumerator1
     {
         public readonly int Current => value;
 
         int index;
         int value;
-        Pool pool_a;
+        ref readonly int* pool_a;
 
-        public View_Enumerator1(int index, Pool pool_a)
+        public View_Enumerator1(int index, in Pool pool_a)
         {
             this.value = 0;
             this.index = pool_a.GetDenseLength() - 1;
-            this.pool_a = pool_a;
+            this.pool_a = ref pool_a.Map.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a.Map.Body;
+            int* ptr_a = pool_a;
 
             while (index >= 0)
             {
-#if DEBUG
-                Debug.Assert(pool_a.Map.IsBody(ptr_a));
-#endif
                 value = Dense.GetUnchecked(ptr_a, index--);
 
                 return true;
@@ -37,34 +33,30 @@ namespace NttSharp.Models
         }
     }
 
-    public struct View_Enumerator2
+    public unsafe ref struct View_Enumerator2
     {
         public readonly int Current => value;
 
         int value;
         int index;
-        Pool pool_a;
-        Pool pool_b;
+        ref readonly int* pool_a;
+        ref readonly int* pool_b;
 
-        public View_Enumerator2(int index, Pool pool_a, Pool pool_b)
+        public View_Enumerator2(int index, in Pool pool_a, in Pool pool_b)
         {
             this.value = 0;
             this.index = pool_a.GetDenseLength() - 1;
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
+            this.pool_a = ref pool_a.Map.Body;
+            this.pool_b = ref pool_b.Map.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a.Map.Body;
-            int* ptr_b = pool_b.Map.Body;
+            int* ptr_a = pool_a;
+            int* ptr_b = pool_b;
 
             while (index >= 0)
             {
-#if DEBUG
-                Debug.Assert(pool_a.Map.IsBody(ptr_a));
-                Debug.Assert(pool_b.Map.IsBody(ptr_b));
-#endif
                 value = Dense.GetUnchecked(ptr_a, index--);
 
                 if (Sparse.Contains(ptr_b, value))
@@ -76,37 +68,37 @@ namespace NttSharp.Models
         }
     }
 
-    public struct View_Enumerator3
+    public unsafe ref struct View_Enumerator3
     {
         public readonly int Current => value;
 
         int value;
         int index;
-        Pool pool_a;
-        Pool pool_b;
-        Pool pool_c;
+        ref readonly int* pool_a;
+        ref readonly int* pool_b;
+        ref readonly int* pool_c;
 
-        public View_Enumerator3(int index, Pool pool_a, Pool pool_b, Pool pool_c)
+        public View_Enumerator3(int index, in Pool pool_a, in Pool pool_b, in Pool pool_c)
         {
             this.value = 0;
             this.index = pool_a.GetDenseLength() - 1;
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_c;
+            this.pool_a = ref pool_a.Map.Body;
+            this.pool_b = ref pool_b.Map.Body;
+            this.pool_c = ref pool_c.Map.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a.Map.Body;
-            int* ptr_b = pool_b.Map.Body;
-            int* ptr_c = pool_c.Map.Body;
+            int* ptr_a = pool_a;
+            int* ptr_b = pool_b;
+            int* ptr_c = pool_c;
 
             while (index >= 0)
             {
 #if DEBUG
-                Debug.Assert(pool_a.Map.IsBody(ptr_a));
-                Debug.Assert(pool_b.Map.IsBody(ptr_b));
-                Debug.Assert(pool_c.Map.IsBody(ptr_c));
+                //Debug.Assert(pool_a.Map.IsBody(ptr_a));
+                //Debug.Assert(pool_b.Map.IsBody(ptr_b));
+                //Debug.Assert(pool_c.Map.IsBody(ptr_c));
 #endif
                 value = Dense.GetUnchecked(ptr_a, index--);
 
@@ -120,43 +112,36 @@ namespace NttSharp.Models
         }
     }
 
-    public struct View_Enumerator4
+    public unsafe ref struct View_Enumerator4
     {
         public readonly int Current => value;
 
         int value;
         int index;
-        Pool pool_a;
-        Pool pool_b;
-        Pool pool_c;
-        Pool pool_d;
+        ref readonly int* pool_a;
+        ref readonly int* pool_b;
+        ref readonly int* pool_c;
+        ref readonly int* pool_d;
 
-        public View_Enumerator4(int index, Pool pool_a, Pool pool_b, Pool pool_c, Pool pool_d)
+        public View_Enumerator4(int index, in Pool pool_a, in Pool pool_b, in Pool pool_c, in Pool pool_d)
         {
             this.value = 0;
             this.index = pool_a.GetDenseLength() - 1;
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_c;
-            this.pool_d = pool_d;
+            this.pool_a = ref pool_a.Map.Body;
+            this.pool_b = ref pool_b.Map.Body;
+            this.pool_c = ref pool_c.Map.Body;
+            this.pool_d = ref pool_d.Map.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a.Map.Body;
-            int* ptr_b = pool_b.Map.Body;
-            int* ptr_c = pool_c.Map.Body;
-            int* ptr_d = pool_d.Map.Body;
+            int* ptr_a = pool_a;
+            int* ptr_b = pool_b;
+            int* ptr_c = pool_c;
+            int* ptr_d = pool_d;
 
             while (index >= 0)
             {
-#if DEBUG
-                Debug.Assert(pool_a.Map.IsBody(ptr_a));
-                Debug.Assert(pool_b.Map.IsBody(ptr_b));
-                Debug.Assert(pool_c.Map.IsBody(ptr_c));
-                Debug.Assert(pool_d.Map.IsBody(ptr_d));
-#endif
-
                 value = Dense.GetUnchecked(ptr_a, index--);
 
                 if (Sparse.Contains(ptr_b, value) &&
@@ -170,14 +155,14 @@ namespace NttSharp.Models
         }
     }
 
-    public readonly unsafe struct View<A>
+    public readonly ref struct View<A>
         where A : unmanaged
     {
-        readonly Pool pool_a;
+        readonly ref readonly Pool pool_a;
 
-        public View(Pool pool_a)
+        public View(in Pool pool_a)
         {
-            this.pool_a = pool_a;
+            this.pool_a = ref pool_a;
         }
 
         /// <summary>
@@ -188,20 +173,21 @@ namespace NttSharp.Models
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
+        
         public View_Enumerator1 GetEnumerator() => new View_Enumerator1(0, pool_a);
     }
 
-    public readonly unsafe struct View<A, B>
+    public readonly ref struct View<A, B>
         where A : unmanaged
         where B : unmanaged
     {
-        readonly Pool pool_a;
-        readonly Pool pool_b;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
 
-        public View(Pool pool_a, Pool pool_b)
+        public View(in Pool pool_a, in Pool pool_b)
         {
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
         }
 
         /// <summary>
@@ -225,20 +211,20 @@ namespace NttSharp.Models
         public View_Enumerator2 GetEnumerator() => new View_Enumerator2(0, pool_a, pool_b);
     }
 
-    public readonly unsafe struct View<A, B, C>
+    public readonly ref struct View<A, B, C>
         where A : unmanaged
         where B : unmanaged
         where C : unmanaged
     {
-        readonly Pool pool_a;
-        readonly Pool pool_b;
-        readonly Pool pool_c;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
+        readonly ref readonly Pool pool_c;
 
-        public View(Pool pool_a, Pool pool_b, Pool pool_c)
+        public View(in Pool pool_a, in Pool pool_b, in Pool pool_c)
         {
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_c;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
+            this.pool_c = ref pool_c;
         }
 
         /// <summary>
@@ -268,26 +254,26 @@ namespace NttSharp.Models
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
 
-        public View_Enumerator3 GetEnumerator() => new View_Enumerator3(0, pool_a, pool_b, pool_c);
+        public View_Enumerator3 GetEnumerator() => new View_Enumerator3(0, in pool_a, in pool_b, in pool_c);
     }
 
-    public readonly unsafe struct View<A, B, C, D>
+    public readonly ref struct View<A, B, C, D>
         where A : unmanaged
         where B : unmanaged
         where C : unmanaged
         where D : unmanaged
     {
-        readonly Pool pool_a;
-        readonly Pool pool_b;
-        readonly Pool pool_c;
-        readonly Pool pool_d;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
+        readonly ref readonly Pool pool_c;
+        readonly ref readonly Pool pool_d;
 
-        public View(Pool pool_a, Pool pool_b, Pool pool_c, Pool pool_d)
+        public View(in Pool pool_a, in Pool pool_b, in Pool pool_c, in Pool pool_d)
         {
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_c;
-            this.pool_d = pool_d;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
+            this.pool_c = ref pool_c;
+            this.pool_d = ref pool_d;
         }
 
         /// <summary>
@@ -326,6 +312,6 @@ namespace NttSharp.Models
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ref D Get4(int entity) => ref Component.GetComponent<D>(entity, in pool_d.Map, in pool_d.Bytes);
 
-        public View_Enumerator4 GetEnumerator() => new View_Enumerator4(0, pool_a, pool_b, pool_c, pool_d);
+        public View_Enumerator4 GetEnumerator() => new View_Enumerator4(0, in pool_a, in pool_b, in pool_c, in pool_d);
     }
 }

@@ -7,19 +7,19 @@ namespace NttSharp.Entities
         public ReverseView<A> ReverseView<A>()
             where A : unmanaged
         {
-            Pool pool_a = GetPool<A>();
+            ref Pool pool_a = ref GetPool<A>();
 
-            return new ReverseView<A>(pool_a);
+            return new ReverseView<A>(in pool_a);
         }
 
         public ReverseView<A, B> ReverseView<A, B>()
             where A : unmanaged
             where B : unmanaged
         {
-            Pool pool_a = GetPool<A>();
-            Pool pool_b = GetPool<B>();
+            ref Pool pool_a = ref GetPool<A>();
+            ref Pool pool_b = ref GetPool<B>();
 
-            return new ReverseView<A, B>(pool_a, pool_b);
+            return new ReverseView<A, B>(in pool_a, in pool_b);
         }
 
         public ReverseView<A, B, C> ReverseView<A, B, C>()
@@ -27,9 +27,9 @@ namespace NttSharp.Entities
             where B : unmanaged
             where C : unmanaged
         {
-            Pool pool_a = GetPool<A>();
-            Pool pool_b = GetPool<B>();
-            Pool pool_c = GetPool<C>();
+            ref Pool pool_a = ref GetPool<A>();
+            ref Pool pool_b = ref GetPool<B>();
+            ref Pool pool_c = ref GetPool<C>();
 
             return new ReverseView<A, B, C>(pool_a, pool_b, pool_c);
         }
@@ -40,10 +40,10 @@ namespace NttSharp.Entities
             where C : unmanaged
             where D : unmanaged
         {
-            Pool pool_a = GetPool<A>();
-            Pool pool_b = GetPool<B>();
-            Pool pool_c = GetPool<C>();
-            Pool pool_d = GetPool<D>();
+            ref Pool pool_a = ref GetPool<A>();
+            ref Pool pool_b = ref GetPool<B>();
+            ref Pool pool_c = ref GetPool<C>();
+            ref Pool pool_d = ref GetPool<D>();
 
             return new ReverseView<A, B, C, D>(pool_a, pool_b, pool_c, pool_d);
         }

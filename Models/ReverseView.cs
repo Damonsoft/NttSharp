@@ -3,24 +3,24 @@ using NttSharp.Logic;
 
 namespace NttSharp.Models
 {
-    public struct ReverseView_Enumerator1
+    public unsafe ref struct ReverseView_Enumerator1
     {
         public readonly int Current => value;
 
         int index;
         int value;
-        Pool pool_a;
+        ref readonly int* pool_a;
 
-        public ReverseView_Enumerator1(int index, Pool pool_a)
+        public ReverseView_Enumerator1(int index, in Pool pool_a)
         {
             this.index = 0;
             this.value = 0;
-            this.pool_a = pool_a;
+            this.pool_a = ref pool_a.Map.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a.Map.Body;
+            int* ptr_a = pool_a;
 
             while (index < Dense.GetLength(ptr_a))
             {
@@ -32,27 +32,28 @@ namespace NttSharp.Models
         }
     }
 
-    public struct ReverseView_Enumerator2
+    public unsafe ref struct ReverseView_Enumerator2
     {
         public readonly int Current => value;
 
         int index;
         int value;
-        Pool pool_a;
-        Pool pool_b;
+        ref readonly int* pool_a;
+        ref readonly int* pool_b;
+        ref readonly int* pool_c;
 
-        public ReverseView_Enumerator2(int index, Pool pool_a, Pool pool_b)
+        public ReverseView_Enumerator2(int index, in Pool pool_a, in Pool pool_b)
         {
             this.index = index;
             this.value = 0;
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
+            this.pool_a = ref pool_a.Map.Body;
+            this.pool_b = ref pool_b.Map.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a.Map.Body;
-            int* ptr_b = pool_b.Map.Body;
+            int* ptr_a = pool_a;
+            int* ptr_b = pool_b;
 
             while (index < Dense.GetLength(ptr_a))
             {
@@ -67,30 +68,30 @@ namespace NttSharp.Models
         }
     }
 
-    public struct ReverseView_Enumerator3
+    public unsafe ref struct ReverseView_Enumerator3
     {
         public readonly int Current => value;
 
         int index;
         int value;
-        Pool pool_a;
-        Pool pool_b;
-        Pool pool_c;
+        ref readonly int* pool_a;
+        ref readonly int* pool_b;
+        ref readonly int* pool_c;
 
-        public ReverseView_Enumerator3(int index, Pool pool_a, Pool pool_b, Pool pool_c)
+        public ReverseView_Enumerator3(int index, in Pool pool_a, in Pool pool_b, in Pool pool_c)
         {
             this.index = index;
             this.value = 0;
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_c;
+            this.pool_a = ref pool_a.Map.Body;
+            this.pool_b = ref pool_b.Map.Body;
+            this.pool_c = ref pool_c.Map.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a.Map.Body;
-            int* ptr_b = pool_b.Map.Body;
-            int* ptr_c = pool_c.Map.Body;
+            int* ptr_a = pool_a;
+            int* ptr_b = pool_b;
+            int* ptr_c = pool_c;
 
             while (index < Dense.GetLength(ptr_a))
             {
@@ -106,33 +107,33 @@ namespace NttSharp.Models
         }
     }
 
-    public struct ReverseView_Enumerator4
+    public unsafe ref struct ReverseView_Enumerator4
     {
         public readonly int Current => value;
 
         int index;
         int value;
-        Pool pool_a;
-        Pool pool_b;
-        Pool pool_c;
-        Pool pool_d;
+        ref readonly int* pool_a;
+        ref readonly int* pool_b;
+        ref readonly int* pool_c;
+        ref readonly int* pool_d;
 
-        public ReverseView_Enumerator4(int index, Pool pool_T, Pool pool_U, Pool pool_X, Pool pool_Y)
+        public ReverseView_Enumerator4(int index, in Pool pool_a, in Pool pool_b, in Pool pool_c, in Pool pool_d)
         {
             this.index = index;
             this.value = 0;
-            this.pool_a = pool_T;
-            this.pool_b = pool_U;
-            this.pool_c = pool_X;
-            this.pool_d = pool_Y;
+            this.pool_a = ref pool_a.Map.Body;
+            this.pool_b = ref pool_b.Map.Body;
+            this.pool_c = ref pool_c.Map.Body;
+            this.pool_d = ref pool_d.Map.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a.Map.Body;
-            int* ptr_b = pool_b.Map.Body;
-            int* ptr_c = pool_c.Map.Body;
-            int* ptr_d = pool_d.Map.Body;
+            int* ptr_a = pool_a;
+            int* ptr_b = pool_b;
+            int* ptr_c = pool_c;
+            int* ptr_d = pool_d;
 
             while (index < Dense.GetLength(ptr_a))
             {
@@ -149,87 +150,87 @@ namespace NttSharp.Models
         }
     }
 
-    public readonly unsafe struct ReverseView<A> where A : unmanaged
+    public readonly unsafe ref struct ReverseView<A> where A : unmanaged
     {
-        readonly Pool pool_a;
+        readonly ref readonly Pool pool_a;
 
-        public ReverseView(Pool pool_T)
+        public ReverseView(in Pool pool_T)
         {
-            this.pool_a = pool_T;
+            this.pool_a = ref pool_T;
         }
 
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
 
-        public ReverseView_Enumerator1 GetEnumerator() => new ReverseView_Enumerator1(0, pool_a);
+        public ReverseView_Enumerator1 GetEnumerator() => new ReverseView_Enumerator1(0, in pool_a);
     }
 
-    public readonly unsafe struct ReverseView<A, B>
+    public readonly unsafe ref struct ReverseView<A, B>
         where A : unmanaged
         where B : unmanaged
     {
-        readonly Pool pool_a;
-        readonly Pool pool_b;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
 
         public ReverseView(
-            Pool pool_a,
-            Pool pool_b)
+            in Pool pool_a,
+            in Pool pool_b)
         {
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
         }
 
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
         public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
 
-        public ReverseView_Enumerator2 GetEnumerator() => new ReverseView_Enumerator2(0, pool_a, pool_b);
+        public ReverseView_Enumerator2 GetEnumerator() => new ReverseView_Enumerator2(0, in pool_a, in pool_b);
     }
 
-    public readonly unsafe struct ReverseView<A, B, C>
+    public readonly unsafe ref struct ReverseView<A, B, C>
         where A : unmanaged
         where B : unmanaged
         where C : unmanaged
     {
-        readonly Pool pool_a;
-        readonly Pool pool_b;
-        readonly Pool pool_c;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
+        readonly ref readonly Pool pool_c;
 
         public ReverseView(
-            Pool pool_a,
-            Pool pool_b,
-            Pool pool_c)
+            in Pool pool_a,
+            in Pool pool_b,
+            in Pool pool_c)
         {
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_c;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
+            this.pool_c = ref pool_c;
         }
 
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
         public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
         public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
-        public ReverseView_Enumerator3 GetEnumerator() => new ReverseView_Enumerator3(0, pool_a, pool_b, pool_c);
+        public ReverseView_Enumerator3 GetEnumerator() => new ReverseView_Enumerator3(0, in pool_a, in pool_b, in pool_c);
     }
 
-    public readonly unsafe struct ReverseView<A, B, C, D>
+    public readonly unsafe ref struct ReverseView<A, B, C, D>
         where A : unmanaged
         where B : unmanaged
         where C : unmanaged
         where D : unmanaged
     {
-        readonly Pool pool_a;
-        readonly Pool pool_b;
-        readonly Pool pool_c;
-        readonly Pool pool_d;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
+        readonly ref readonly Pool pool_c;
+        readonly ref readonly Pool pool_d;
 
         public ReverseView(
-            Pool pool_a,
-            Pool pool_b,
-            Pool pool_c,
-            Pool pool_d)
+            in Pool pool_a,
+            in Pool pool_b,
+            in Pool pool_c,
+            in Pool pool_d)
         {
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_c;
-            this.pool_d = pool_d;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
+            this.pool_c = ref pool_c;
+            this.pool_d = ref pool_d;
         }
 
         public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
@@ -237,6 +238,6 @@ namespace NttSharp.Models
         public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
         public readonly ref D Get4(int entity) => ref Component.GetComponent<D>(entity, in pool_d.Map, in pool_d.Bytes);
 
-        public ReverseView_Enumerator4 GetEnumerator() => new ReverseView_Enumerator4(0, pool_a, pool_b, pool_c, pool_d);
+        public ReverseView_Enumerator4 GetEnumerator() => new ReverseView_Enumerator4(0, in pool_a, in pool_b, in pool_c, in pool_d);
     }
 }
