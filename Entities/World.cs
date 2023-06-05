@@ -9,18 +9,18 @@ namespace NttSharp.Entities
     /// </summary>
     public sealed partial class World
     {
-        static int _unique = 0;
+        static ntt _unique = 0;
 
-        List<int> free = new List<int>();
+        List<ntt> free = new List<ntt>();
         Chunker<Pool> pools = Chunker<Pool>.Create(32);
         SparseSet entities = SparseSet.Create(512);
 
         /// <summary>
         /// Creates an empty entity.
         /// </summary>
-        public int Create()
+        public ntt Create()
         {
-            int entity = _GetEntityId();
+            ntt entity = _GetEntityId();
 
             SparseSet.Add(ref entities, entity);
    
@@ -32,11 +32,11 @@ namespace NttSharp.Entities
         /// then recycles the entity id.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public void Destroy(int entity)
+        public void Destroy(ntt entity)
         {
             if (entities.Contains(entity))
             {
-                SparseSet.Remove(entities, entity);
+                SparseSet.Remove(ref entities, entity);
 
                 free.Add(entity);
 
@@ -49,7 +49,7 @@ namespace NttSharp.Entities
         /// Checks if the entity is valid.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public bool Contains(int entity) => entities.Contains(entity);
+        public bool Contains(ntt entity) => entities.Contains(entity);
 
         /// <summary>
         /// Assigns a component of type
@@ -58,7 +58,7 @@ namespace NttSharp.Entities
         /// </summary>
         /// <param name="entity">the entity id</param>
         /// <param name="initial">the initial value of the component</param>
-        public void Assign<T>(int entity, T initial) where T : unmanaged
+        public void Assign<T>(ntt entity, T initial) where T : unmanaged
         {
             ref Pool pool = ref pools[Chunker<Pool>.Ensure(ref pools, TypeID<T>.Unique)];
 
@@ -75,7 +75,7 @@ namespace NttSharp.Entities
         /// from an entity.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public void Remove<T>(int entity) where T : unmanaged
+        public void Remove<T>(ntt entity) where T : unmanaged
         {
             pools[TypeID<T>.Unique].RemoveComponent(entity);
         }
@@ -85,7 +85,7 @@ namespace NttSharp.Entities
         /// from an entity.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public void RemoveAll(int entity)
+        public void RemoveAll(ntt entity)
         {
             for (int y = 0; y < pools.Length; y++)
             {
@@ -107,7 +107,7 @@ namespace NttSharp.Entities
         /// <typeparamref name="T"/>.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public ref T Get<T>(int entity) where T : unmanaged
+        public ref T Get<T>(ntt entity) where T : unmanaged
         {
             return ref GetPool<T>().GetComponent<T>(entity);
         }
@@ -158,12 +158,12 @@ namespace NttSharp.Entities
             return pools[unique];
         }
 
-        int _GetEntityId()
+        ntt _GetEntityId()
         {
             if (free.Count > 0)
             {
                 int i = free.Count - 1;
-                int e = free[i];
+                ntt e = free[i];
                 free.RemoveAt(i);
                 return e;
             }

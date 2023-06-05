@@ -1,4 +1,5 @@
-﻿using NttSharp.Entities;
+﻿using NttSharp.Collections;
+using NttSharp.Entities;
 using NttSharp.Logic;
 using System.Runtime.CompilerServices;
 
@@ -6,26 +7,26 @@ namespace NttSharp.Models
 {
     public unsafe ref struct View_Enumerator1
     {
-        public readonly int Current => value;
+        public readonly ntt Current => value;
 
         int index;
-        int value;
-        ref readonly int* pool_a;
+        ntt value;
+        ref readonly ntt* pool_a;
 
         public View_Enumerator1(int index, in Pool pool_a)
         {
             this.value = 0;
             this.index = pool_a.GetDenseLength() - 1;
-            this.pool_a = ref pool_a.Map.Body;
+            this.pool_a = ref pool_a.Set.Body;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a;
+            ntt* ptr_a = pool_a;
 
             while (index >= 0)
             {
-                value = Dense.GetUnchecked(ptr_a, index--);
+                value = Dense.PeekUnchecked(ptr_a, index--);
 
                 return true;
             }
@@ -33,33 +34,35 @@ namespace NttSharp.Models
         }
     }
 
-    public unsafe ref struct View_Enumerator2
+    public ref struct View_Enumerator2
     {
-        public readonly int Current => value;
+        public readonly ntt Current => value;
 
-        int value;
+        ntt value;
         int index;
-        ref readonly int* pool_a;
-        ref readonly int* pool_b;
+        ref readonly SparseSet pool_a;
+        ref readonly SparseSet pool_b;
 
         public View_Enumerator2(int index, in Pool pool_a, in Pool pool_b)
         {
             this.value = 0;
             this.index = pool_a.GetDenseLength() - 1;
-            this.pool_a = ref pool_a.Map.Body;
-            this.pool_b = ref pool_b.Map.Body;
+            this.pool_a = ref pool_a.Set;
+            this.pool_b = ref pool_b.Set;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a;
-            int* ptr_b = pool_b;
+            ntt* ptr_a = pool_a.Body;
+            ntt* ptr_b = pool_b.Body;
+            int ptr_b_slen = pool_b._SparseLength;
+            int ptr_b_dlen = pool_b._DenseLength;
 
             while (index >= 0)
             {
-                value = Dense.GetUnchecked(ptr_a, index--);
+                value = Dense.PeekUnchecked(ptr_a, index--);
 
-                if (Sparse.Contains(ptr_b, value))
+                if (Sparse.Contains(ptr_b, value, ptr_b_slen, ptr_b_dlen))
                 {
                     return true;
                 }
@@ -68,42 +71,41 @@ namespace NttSharp.Models
         }
     }
 
-    public unsafe ref struct View_Enumerator3
+    public ref struct View_Enumerator3
     {
-        public readonly int Current => value;
+        public readonly ntt Current => value;
 
-        int value;
+        ntt value;
         int index;
-        ref readonly int* pool_a;
-        ref readonly int* pool_b;
-        ref readonly int* pool_c;
+        ref readonly SparseSet pool_a;
+        ref readonly SparseSet pool_b;
+        ref readonly SparseSet pool_c;
 
         public View_Enumerator3(int index, in Pool pool_a, in Pool pool_b, in Pool pool_c)
         {
             this.value = 0;
             this.index = pool_a.GetDenseLength() - 1;
-            this.pool_a = ref pool_a.Map.Body;
-            this.pool_b = ref pool_b.Map.Body;
-            this.pool_c = ref pool_c.Map.Body;
+            this.pool_a = ref pool_a.Set;
+            this.pool_b = ref pool_b.Set;
+            this.pool_c = ref pool_c.Set;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a;
-            int* ptr_b = pool_b;
-            int* ptr_c = pool_c;
+            ntt* ptr_a = pool_a.Body;
+            ntt* ptr_b = pool_b.Body;
+            int ptr_b_slen = pool_b._SparseLength;
+            int ptr_b_dlen = pool_b._DenseLength;
+            ntt* ptr_c = pool_c.Body;
+            int ptr_c_slen = pool_c._SparseLength;
+            int ptr_c_dlen = pool_c._DenseLength;
 
             while (index >= 0)
             {
-#if DEBUG
-                //Debug.Assert(pool_a.Map.IsBody(ptr_a));
-                //Debug.Assert(pool_b.Map.IsBody(ptr_b));
-                //Debug.Assert(pool_c.Map.IsBody(ptr_c));
-#endif
-                value = Dense.GetUnchecked(ptr_a, index--);
+                value = Dense.PeekUnchecked(ptr_a, index--);
 
-                if (Sparse.Contains(ptr_b, value) &&
-                    Sparse.Contains(ptr_c, value))
+                if (Sparse.Contains(ptr_b, value, ptr_b_slen, ptr_b_dlen) &&
+                    Sparse.Contains(ptr_c, value, ptr_c_slen, ptr_c_dlen))
                 {
                     return true;
                 }
@@ -112,41 +114,47 @@ namespace NttSharp.Models
         }
     }
 
-    public unsafe ref struct View_Enumerator4
+    public ref struct View_Enumerator4
     {
-        public readonly int Current => value;
+        public readonly ntt Current => value;
 
-        int value;
+        ntt value;
         int index;
-        ref readonly int* pool_a;
-        ref readonly int* pool_b;
-        ref readonly int* pool_c;
-        ref readonly int* pool_d;
+        ref readonly SparseSet pool_a;
+        ref readonly SparseSet pool_b;
+        ref readonly SparseSet pool_c;
+        ref readonly SparseSet pool_d;
 
         public View_Enumerator4(int index, in Pool pool_a, in Pool pool_b, in Pool pool_c, in Pool pool_d)
         {
             this.value = 0;
             this.index = pool_a.GetDenseLength() - 1;
-            this.pool_a = ref pool_a.Map.Body;
-            this.pool_b = ref pool_b.Map.Body;
-            this.pool_c = ref pool_c.Map.Body;
-            this.pool_d = ref pool_d.Map.Body;
+            this.pool_a = ref pool_a.Set;
+            this.pool_b = ref pool_b.Set;
+            this.pool_c = ref pool_c.Set;
+            this.pool_d = ref pool_d.Set;
         }
 
         public unsafe bool MoveNext()
         {
-            int* ptr_a = pool_a;
-            int* ptr_b = pool_b;
-            int* ptr_c = pool_c;
-            int* ptr_d = pool_d;
+            ntt* ptr_a = pool_a.Body;
+            ntt* ptr_b = pool_b.Body;
+            int ptr_b_slen = pool_b._SparseLength;
+            int ptr_b_dlen = pool_b._DenseLength;
+            ntt* ptr_c = pool_c.Body;
+            int ptr_c_slen = pool_c._SparseLength;
+            int ptr_c_dlen = pool_c._DenseLength;
+            ntt* ptr_d = pool_d.Body;
+            int ptr_d_slen = pool_d._SparseLength;
+            int ptr_d_dlen = pool_d._DenseLength;
 
             while (index >= 0)
             {
-                value = Dense.GetUnchecked(ptr_a, index--);
+                value = Dense.PeekUnchecked(ptr_a, index--);
 
-                if (Sparse.Contains(ptr_b, value) &&
-                    Sparse.Contains(ptr_c, value) &&
-                    Sparse.Contains(ptr_d, value))
+                if (Sparse.Contains(ptr_b, value, ptr_b_slen, ptr_b_dlen) &&
+                    Sparse.Contains(ptr_c, value, ptr_c_slen, ptr_c_dlen) &&
+                    Sparse.Contains(ptr_d, value, ptr_d_slen, ptr_d_dlen))
                 {
                     return true;
                 }
@@ -155,7 +163,7 @@ namespace NttSharp.Models
         }
     }
 
-    public readonly ref struct View<A>
+    public readonly unsafe ref struct View<A>
         where A : unmanaged
     {
         readonly ref readonly Pool pool_a;
@@ -172,9 +180,9 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
+        public readonly ref A Get1(ntt entity) => ref Component.GetComponent<A>(entity, in pool_a.Set, in pool_a.Bytes);
         
-        public View_Enumerator1 GetEnumerator() => new View_Enumerator1(0, pool_a);
+        public View_Enumerator1 GetEnumerator() => new View_Enumerator1(0, in pool_a);
     }
 
     public readonly ref struct View<A, B>
@@ -197,7 +205,7 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
+        public readonly ref A Get1(ntt entity) => ref Component.GetComponent<A>(entity, in pool_a.Set, in pool_a.Bytes);
 
         /// <summary>
         /// Gets a reference to
@@ -206,9 +214,9 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
+        public readonly ref B Get2(ntt entity) => ref Component.GetComponent<B>(entity, in pool_b.Set, in pool_b.Bytes);
 
-        public View_Enumerator2 GetEnumerator() => new View_Enumerator2(0, pool_a, pool_b);
+        public View_Enumerator2 GetEnumerator() => new View_Enumerator2(0, in pool_a, in pool_b);
     }
 
     public readonly ref struct View<A, B, C>
@@ -234,7 +242,7 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
+        public readonly ref A Get1(ntt entity) => ref Component.GetComponent<A>(entity, in pool_a.Set, in pool_a.Bytes);
 
         /// <summary>
         /// Gets a reference to
@@ -243,16 +251,16 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
+        public readonly ref B Get2(ntt entity) => ref Component.GetComponent<B>(entity, in pool_b.Set, in pool_b.Bytes);
 
         /// <summary>
         /// Gets a reference to
         /// the component of type: 
         /// <typeparamref name="C"/>,
         /// </summary>
-        /// <param name="entity">the entity id</param>
+        /// <param name="entity">the entity id</param> 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
+        public readonly ref C Get3(ntt entity) => ref Component.GetComponent<C>(entity, in pool_c.Set, in pool_c.Bytes);
 
         public View_Enumerator3 GetEnumerator() => new View_Enumerator3(0, in pool_a, in pool_b, in pool_c);
     }
@@ -283,7 +291,7 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref A Get1(int entity) => ref Component.GetComponent<A>(entity, in pool_a.Map, in pool_a.Bytes);
+        public readonly ref A Get1(ntt entity) => ref Component.GetComponent<A>(entity, in pool_a.Set, in pool_a.Bytes);
 
         /// <summary>
         /// Gets a reference to
@@ -292,7 +300,7 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref B Get2(int entity) => ref Component.GetComponent<B>(entity, in pool_b.Map, in pool_b.Bytes);
+        public readonly ref B Get2(ntt entity) => ref Component.GetComponent<B>(entity, in pool_b.Set, in pool_b.Bytes);
 
         /// <summary>
         /// Gets a reference to
@@ -301,7 +309,7 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref C Get3(int entity) => ref Component.GetComponent<C>(entity, in pool_c.Map, in pool_c.Bytes);
+        public readonly ref C Get3(ntt entity) => ref Component.GetComponent<C>(entity, in pool_c.Set, in pool_c.Bytes);
 
         /// <summary>
         /// Gets a reference to
@@ -310,7 +318,7 @@ namespace NttSharp.Models
         /// </summary>
         /// <param name="entity">the entity id</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly ref D Get4(int entity) => ref Component.GetComponent<D>(entity, in pool_d.Map, in pool_d.Bytes);
+        public readonly ref D Get4(ntt entity) => ref Component.GetComponent<D>(entity, in pool_d.Set, in pool_d.Bytes);
 
         public View_Enumerator4 GetEnumerator() => new View_Enumerator4(0, in pool_a, in pool_b, in pool_c, in pool_d);
     }

@@ -7,7 +7,7 @@ namespace NttSharp.Logic
     public static unsafe class Component
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetComponent<T>(int entity, in T value, in SparseSet set, in ChunkedBytes bytes) where T : unmanaged
+        public static void SetComponent<T>(ntt entity, in T value, in SparseSet set, in ChunkedBytes bytes) where T : unmanaged
         {
 #if DEBUG
             Debug.Assert(set.Contains(entity), "Set already contain the entity!");
@@ -16,7 +16,7 @@ namespace NttSharp.Logic
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref T GetComponent<T>(int entity, scoped in SparseSet set, scoped in ChunkedBytes bytes) where T : unmanaged
+        public static ref T GetComponent<T>(ntt entity, scoped in SparseSet set, scoped in ChunkedBytes bytes) where T : unmanaged
         {
 #if DEBUG
             Debug.Assert(set.Contains(entity), "Set doesn't contain the entity!");

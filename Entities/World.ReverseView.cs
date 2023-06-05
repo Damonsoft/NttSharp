@@ -31,7 +31,7 @@ namespace NttSharp.Entities
             ref Pool pool_b = ref GetPool<B>();
             ref Pool pool_c = ref GetPool<C>();
 
-            return new ReverseView<A, B, C>(pool_a, pool_b, pool_c);
+            return new ReverseView<A, B, C>(in pool_a, in pool_b, in pool_c);
         }
 
         public ReverseView<A, B, C, D> ReverseView<A, B, C, D>()
@@ -45,7 +45,7 @@ namespace NttSharp.Entities
             ref Pool pool_c = ref GetPool<C>();
             ref Pool pool_d = ref GetPool<D>();
 
-            return new ReverseView<A, B, C, D>(pool_a, pool_b, pool_c, pool_d);
+            return new ReverseView<A, B, C, D>(in pool_a, in pool_b, in pool_c, in pool_d);
         }
     }
 }

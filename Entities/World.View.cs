@@ -14,7 +14,7 @@ namespace NttSharp.Entities
         {
             ref Pool pool = ref GetPool<A>();
 
-            return new View<A>(pool);
+            return new View<A>(in pool);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace NttSharp.Entities
             ref Pool pool_a = ref GetPool<A>();
             ref Pool pool_b = ref GetPool<B>();
 
-            return new View<A, B>(pool_a, pool_b);
+            return new View<A, B>(in pool_a, in pool_b);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace NttSharp.Entities
             ref Pool pool_c = ref GetPool<C>();
             ref Pool pool_d = ref GetPool<D>();
 
-            return new View<A, B, C, D>(pool_a, pool_b, pool_c, pool_d);
+            return new View<A, B, C, D>(in pool_a, in pool_b, in pool_c, in pool_d);
         }
     }
 }

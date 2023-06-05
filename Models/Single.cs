@@ -3,18 +3,18 @@ using System.Runtime.CompilerServices;
 
 namespace NttSharp.Models
 {
-    public readonly struct Single<A>
+    public readonly ref struct Single<A>
         where A : unmanaged
     {
-        public readonly int Entity => entity;
+        public readonly ntt Entity => entity;
 
-        readonly int entity;
-        readonly Pool pool_a;
+        readonly ntt entity;
+        readonly ref readonly Pool pool_a;
 
-        public Single(int entity, Pool pool_a)
+        public Single(ntt entity, in Pool pool_a)
         {
             this.entity = entity;
-            this.pool_a = pool_a;
+            this.pool_a = ref pool_a;
         }
 
         public readonly ref A Get1() => ref pool_a.GetComponent<A>(entity);
@@ -22,21 +22,21 @@ namespace NttSharp.Models
         public readonly void Set1(in A value) => pool_a.SetComponent(entity, in value);
     }
 
-    public readonly struct Single<A, B>
+    public readonly ref struct Single<A, B>
         where A : unmanaged
         where B : unmanaged
     {
-        public readonly int Entity => entity;
+        public readonly ntt Entity => entity;
 
-        readonly int entity;
-        readonly Pool pool_a;
-        readonly Pool pool_b;
+        readonly ntt entity;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
 
-        public Single(int entity, Pool pool_a, Pool pool_b)
+        public Single(ntt entity, in Pool pool_a, in Pool pool_b)
         {
             this.entity = entity;
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
         }
 
         public readonly ref A Get1() => ref pool_a.GetComponent<A>(entity);
@@ -46,22 +46,22 @@ namespace NttSharp.Models
         public readonly void Set2(in B value) => pool_b.SetComponent(entity, in value);
     }
 
-    public readonly struct Single<A, B, C>
+    public readonly ref struct Single<A, B, C>
         where A : unmanaged
         where B : unmanaged
         where C : unmanaged
     {
-        readonly int entity;
-        readonly Pool pool_a;
-        readonly Pool pool_b;
-        readonly Pool pool_c;
+        readonly ref ntt entity;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
+        readonly ref readonly Pool pool_c;
 
-        public Single(int entity, Pool pool_a, Pool pool_b, Pool pool_c)
+        public Single(ntt entity, in Pool pool_a, in Pool pool_b, in Pool pool_c)
         {
             this.entity = entity;
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_b;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
+            this.pool_c = ref pool_c;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -78,25 +78,25 @@ namespace NttSharp.Models
         public readonly void Set3(in C value) => pool_c.SetComponent(entity, in value);
     }
 
-    public readonly struct Single<A, B, C, D>
+    public readonly ref struct Single<A, B, C, D>
         where A : unmanaged
         where B : unmanaged
         where C : unmanaged
         where D : unmanaged
     {
-        readonly int entity;
-        readonly Pool pool_a;
-        readonly Pool pool_b;
-        readonly Pool pool_c;
-        readonly Pool pool_d;
+        readonly ntt entity;
+        readonly ref readonly Pool pool_a;
+        readonly ref readonly Pool pool_b;
+        readonly ref readonly Pool pool_c;
+        readonly ref readonly Pool pool_d;
 
-        public Single(int entity, Pool pool_a, Pool pool_b, Pool pool_c, Pool pool_d)
+        public Single(ntt entity, in Pool pool_a, in Pool pool_b, in Pool pool_c, in Pool pool_d)
         {
             this.entity = entity;
-            this.pool_a = pool_a;
-            this.pool_b = pool_b;
-            this.pool_c = pool_c;
-            this.pool_d = pool_d;
+            this.pool_a = ref pool_a;
+            this.pool_b = ref pool_b;
+            this.pool_c = ref pool_c;
+            this.pool_d = ref pool_d;
         }
 
         public readonly ref A Get1() => ref pool_a.GetComponent<A>(entity);
@@ -108,6 +108,5 @@ namespace NttSharp.Models
         public readonly void Set2(in B value) => pool_b.SetComponent(entity, in value);
         public readonly void Set3(in C value) => pool_c.SetComponent(entity, in value);
         public readonly void Set4(in D value) => pool_d.SetComponent(entity, in value);
-
     }
 }

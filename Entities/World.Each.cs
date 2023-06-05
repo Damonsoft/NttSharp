@@ -7,10 +7,10 @@ namespace NttSharp.Entities
     public delegate void EachDelegate<A, B, C>(ref A arg1, ref B arg2, ref C arg3);
     public delegate void EachDelegate<A, B, C, D>(ref A arg1, ref B arg2, ref C arg3, ref D arg4);
 
-    public delegate void EachDelegateWithEntity<A>(int entity, ref A arg);
-    public delegate void EachDelegateWithEntity<A, B>(int entity, ref A arg1, ref B arg2);
-    public delegate void EachDelegateWithEntity<A, B, C>(int entity, ref A arg1, ref B arg2, ref C arg3);
-    public delegate void EachDelegateWithEntity<A, B, C, D>(int entity, ref A arg1, ref B arg2, ref C arg3, ref D arg4);
+    public delegate void EachDelegateWithEntity<A>(ntt entity, ref A arg);
+    public delegate void EachDelegateWithEntity<A, B>(ntt entity, ref A arg1, ref B arg2);
+    public delegate void EachDelegateWithEntity<A, B, C>(ntt entity, ref A arg1, ref B arg2, ref C arg3);
+    public delegate void EachDelegateWithEntity<A, B, C, D>(ntt entity, ref A arg1, ref B arg2, ref C arg3, ref D arg4);
 
     public sealed partial class World
     {

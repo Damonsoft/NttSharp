@@ -1,4 +1,5 @@
 ﻿using NttSharp.Logic;
+using System.Runtime.CompilerServices;
 
 namespace NttSharp.Entities
 {
@@ -11,7 +12,8 @@ namespace NttSharp.Entities
         /// type: <typeparamref name="A"/>.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public bool Has<A>(int entity) => Has(entity, TypeID<A>.Unique);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Has<A>(ntt entity) => Has(entity, TypeID<A>.Unique);
 
         /// <summary>
         /// Checks if an entity
@@ -20,7 +22,7 @@ namespace NttSharp.Entities
         /// </summary>
         /// <param name="entity">the entity id</param>
         /// <param name="type">the type id of the component</param>
-        public bool Has(int entity, int type)
+        public bool Has(ntt entity, int type)
         {
             Pool? pool = TryGetPool(type);
 
@@ -39,7 +41,7 @@ namespace NttSharp.Entities
         /// <typeparamref name="B"/>.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public bool HasAny<A, B>(int entity)
+        public bool HasAny<A, B>(ntt entity)
             where A : unmanaged
             where B : unmanaged
         {
@@ -56,7 +58,7 @@ namespace NttSharp.Entities
         /// components types:
         /// <typeparamref name="A"/>,
         /// <typeparamref name="B"/>,    /// <param name="entity">the entity id</param>
-        public bool HasAny<A, B, C>(int entity)
+        public bool HasAny<A, B, C>(ntt entity)
             where A : unmanaged
             where B : unmanaged
             where C : unmanaged
@@ -84,7 +86,7 @@ namespace NttSharp.Entities
         /// <typeparamref name="D"/>.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public bool HasAny<A, B, C, D>(int entity)
+        public bool HasAny<A, B, C, D>(ntt entity)
             where A : unmanaged
             where B : unmanaged
             where C : unmanaged
@@ -113,7 +115,7 @@ namespace NttSharp.Entities
         /// <typeparamref name="B"/>,
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public bool HasAll<A, B>(int entity) =>
+        public bool HasAll<A, B>(ntt entity) =>
                 Has(entity, TypeID<A>.Unique) &&
                 Has(entity, TypeID<B>.Unique);
 
@@ -126,7 +128,7 @@ namespace NttSharp.Entities
         /// <typeparamref name="C"/>,
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public bool HasAll<A, B, C>(int entity) =>
+        public bool HasAll<A, B, C>(ntt entity) =>
                 Has(entity, TypeID<A>.Unique) &&
                 Has(entity, TypeID<B>.Unique) &&
                 Has(entity, TypeID<C>.Unique);
@@ -141,7 +143,7 @@ namespace NttSharp.Entities
         /// <typeparamref name="D"/>.
         /// </summary>
         /// <param name="entity">the entity id</param>
-        public bool HasAll<A, B, C, D>(int entity) =>
+        public bool HasAll<A, B, C, D>(ntt entity) =>
                 Has(entity, TypeID<A>.Unique) &&
                 Has(entity, TypeID<B>.Unique) &&
                 Has(entity, TypeID<C>.Unique) &&

@@ -6,13 +6,13 @@ namespace NttSharp.Entities
     {
         public bool TryFirst<A>(out Single<A> result) where A : unmanaged
 		{
-			Pool pool_a = GetPool<A>();
+			ref Pool pool_a = ref GetPool<A>();
 
-			foreach(int entity in AllEntites())
+			foreach(ntt entity in AllEntites())
 			{
 				if (pool_a.Contains(entity))
 				{
-					result = new Single<A>(entity, pool_a);
+					result = new Single<A>(entity, in pool_a);
 
 					return true;
 				}
@@ -26,15 +26,15 @@ namespace NttSharp.Entities
 			where A : unmanaged
 			where B : unmanaged
 		{
-			Pool pool_a = GetPool<A>();
-			Pool pool_b = GetPool<B>();
+			ref Pool pool_a = ref GetPool<A>();
+			ref Pool pool_b = ref GetPool<B>();
 
-			foreach (int entity in AllEntites())
+			foreach (ntt entity in AllEntites())
 			{
 				if (pool_a.Contains(entity) &&
 					pool_b.Contains(entity))
 				{
-					result = new Single<A, B>(entity, pool_a, pool_b);
+					result = new Single<A, B>(entity, in pool_a, in pool_b);
 
 					return true;
 				}
@@ -49,16 +49,16 @@ namespace NttSharp.Entities
 			where B : unmanaged
             where C : unmanaged
         {
-            Pool pool_a = GetPool<A>();
-            Pool pool_b = GetPool<B>();
-			Pool pool_c = GetPool<C>();
+            ref Pool pool_a = ref GetPool<A>();
+            ref Pool pool_b = ref GetPool<B>();
+			ref Pool pool_c = ref GetPool<C>();
 
-            foreach (int entity in AllEntites())
+            foreach (ntt entity in AllEntites())
             {
                 if (pool_a.Contains(entity) &&
                     pool_b.Contains(entity))
                 {
-                    result = new Single<A, B, C>(entity, pool_a, pool_b, pool_c);
+                    result = new Single<A, B, C>(entity, in pool_a, in pool_b, in pool_c);
 
                     return true;
                 }
@@ -76,13 +76,13 @@ namespace NttSharp.Entities
         /// </summary>
         public Single<A> First<A>() where A : unmanaged
 		{
-			Pool pool_a = GetPool<A>();
+			ref Pool pool_a = ref GetPool<A>();
 
-			foreach (int entity in AllEntites())
+			foreach (ntt entity in AllEntites())
 			{
 				if (pool_a.Contains(entity))
 				{
-					return new Single<A>(entity, pool_a);
+					return new Single<A>(entity, in pool_a);
 				}	
 			}
 			throw new Exception();
@@ -99,15 +99,15 @@ namespace NttSharp.Entities
 			where A : unmanaged
 			where B : unmanaged
 		{
-			Pool pool_a = GetPool<A>();
-			Pool pool_b = GetPool<B>();
+			ref Pool pool_a = ref GetPool<A>();
+			ref Pool pool_b = ref GetPool<B>();
 
-			foreach (int entity in AllEntites())
+			foreach (ntt entity in AllEntites())
 			{
 				if (pool_a.Contains(entity) &&
 					pool_b.Contains(entity))
 				{
-					return new Single<A, B>(entity, pool_a, pool_b);
+					return new Single<A, B>(entity, in pool_a, in pool_b);
 				}
 			}
 			throw new Exception();
@@ -126,17 +126,17 @@ namespace NttSharp.Entities
 			where B : unmanaged
 			where C : unmanaged
 		{
-			Pool pool_a = GetPool<A>();
-			Pool pool_b = GetPool<B>();
-			Pool pool_c = GetPool<C>();
+			ref Pool pool_a = ref GetPool<A>();
+			ref Pool pool_b = ref GetPool<B>();
+			ref Pool pool_c = ref GetPool<C>();
 
-			foreach (int entity in AllEntites())
+			foreach (ntt entity in AllEntites())
 			{
 				if (pool_a.Contains(entity) &&
 					pool_b.Contains(entity) &&
 					pool_c.Contains(entity))
 				{
-					return new Single<A, B, C>(entity, pool_a, pool_b, pool_c);
+					return new Single<A, B, C>(entity, in pool_a, in pool_b, in pool_c);
 				}
 			}
 			throw new Exception();

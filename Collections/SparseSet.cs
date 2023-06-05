@@ -3,46 +3,11 @@ using System.Runtime.CompilerServices;
 
 namespace NttSharp.Collections
 {
-    public readonly unsafe struct DenseWrap
-    {
-        public readonly ref int Length => ref _pointer[0];
-        public readonly ref int this[int index] => ref _pointer[(index + 1) * 2];
-
-        readonly int* _pointer;
-
-        internal DenseWrap(int* pointer)
-        {
-            _pointer = pointer;
-        }
-
-        public static DenseWrap Create(long[] set)
-        {
-            return new DenseWrap((int*)Unsafe.AsPointer(ref set[0]));
-        }
-    }
-    public readonly unsafe struct SparseWrap
-    {
-        public readonly ref int Length => ref _pointer[1];
-        public readonly ref int this[int index] => ref _pointer[(index + 1) * 2 + 1];
-
-        readonly int* _pointer;
-
-        internal SparseWrap(int* pointer)
-        {
-            _pointer = pointer;
-        }
-
-        public static SparseWrap Create(long[] set)
-        {
-            return new SparseWrap((int*)Unsafe.AsPointer(ref set[0]));
-        }
-    }
-
     public readonly unsafe struct DenseEnumerable
     {
-        private readonly int* Body;
+        private readonly ntt* Body;
 
-        public DenseEnumerable(int* body)
+        public DenseEnumerable(ntt* body)
         {
             Body = body;
         }
@@ -51,13 +16,13 @@ namespace NttSharp.Collections
     }
     public unsafe struct DenseEnumerator
     {
-        public int Current => current;
+        public ntt Current => current;
 
         int index;
-        int current;
-        int* pointer;
+        ntt current;
+        ntt* pointer;
 
-        public DenseEnumerator(int* pointer)
+        public DenseEnumerator(ntt* pointer)
         {
             index = 0;
             current = 0;
@@ -82,34 +47,37 @@ namespace NttSharp.Collections
 
     public readonly unsafe struct SparseSet
     {
-        public readonly int SparseLength => Body[-1];
-        public readonly int DenseLength => Body[-2];
+        public readonly ntt SparseLength => Body[-1];
+        public readonly ntt DenseLength => Body[-2];
 
-        internal readonly int* Body;
+        internal readonly ntt* Body;
+        internal readonly ntt[] Head;
+        internal readonly int _SparseLength; // cached
+        internal readonly int _DenseLength; // cached
 
-        internal readonly int[] Reference;
-
-        private SparseSet(int* Body, int[] Reference)
+        private SparseSet(ntt* Body, ntt[] Head, int sparseLength, int denseLength)
         {
             this.Body = Body;
-            this.Reference = Reference;
+            this.Head = Head;
+            this._SparseLength = sparseLength;
+            this._DenseLength = denseLength;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly DenseEnumerable EnumerateDense() => new DenseEnumerable(Body);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly bool IsWithinSparse(int index) => index < Body[-1];
+        public readonly bool IsWithinSparse(ntt index) => index < Body[-1];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly bool IsWithinDense(int index) => index < Body[-2];
+        public readonly bool IsWithinDense(ntt index) => index < Body[-2];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly bool Contains(int index)
+        public readonly bool Contains(ntt index)
         {
             if (index < Body[-1])
             {
-                int dense_index = Body[index * 2 + 1];
+                ntt dense_index = Body[index * 2 + 1];
 
                 if (dense_index < Body[-2])
                 {
@@ -120,86 +88,79 @@ namespace NttSharp.Collections
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly int GetSparse(int index)
+        public readonly ntt GetSparse(ntt index)
         {
             if (index < Body[-1])
             {
                 return Body[index * 2 + 1];
             }
-            throw new IndexOutOfRangeException();
+            return Fault();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly int GetDense(int index)
+        public readonly ntt GetDense(ntt index)
         {
             if (index < Body[-2])
             {
                 return Body[index * 2];
             }
-            throw new IndexOutOfRangeException();
+            return Fault();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly int GetSparseUnsafe(int index) => Body[index * 2 + 1];
+        public readonly ntt GetSparseUnsafe(ntt index) => Body[index * 2 + 1];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly int GetDenseUnsafe(int index) => Body[index * 2];
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly SparseWrap WrapSparse() => new SparseWrap(&Body[-2]);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly DenseWrap WrapDense() => new DenseWrap(&Body[-2]);
-
-#if DEBUG
-        public readonly bool IsBody(int* pointer) => (int*)Unsafe.AsPointer(ref Reference[2]) == pointer;
-#endif
+        public readonly ntt GetDenseUnsafe(ntt index) => Body[index * 2];
 
         public static SparseSet Create(int length)
         {
-            int[] set = GC.AllocateArray<int>(length, pinned: true);
+            ntt[] set = GC.AllocateArray<ntt>(length, pinned: true);
 
             Sparse.Init(set);
 
-            return new SparseSet((int*)Unsafe.AsPointer(ref set[2]), set);
+            return new SparseSet((ntt*)Unsafe.AsPointer(ref set[2]), set, set[1], set[0]);
         }
 
-        public static int Add(ref SparseSet set, int offset)
+        public static ntt Add(ref SparseSet set, ntt offset)
         {
-            int[] array = set.Reference;
+            ntt[] head = set.Head;
 
-            int result = Sparse.Add(ref array, offset);
+            ntt result = Sparse.Add(ref head, offset);
 
-            set = new SparseSet((int*)Unsafe.AsPointer(ref array[2]), array);
+            set = new SparseSet((ntt*)Unsafe.AsPointer(ref head[2]), head, head[1], head[0]);
 
             return result;
         }
 
-        public static void Remove(SparseSet set, int offset)
+        public static void Remove(ref SparseSet set, ntt offset)
         {
-            Sparse.Remove(set.Reference, offset);
+            int[] head = set.Head;
+
+            Sparse.Remove(head, offset);
+
+            set = new SparseSet((ntt*)Unsafe.AsPointer(ref head[2]), head, head[1], head[0]);
         }
 
         public static void Resize(ref SparseSet set, int length)
         {
-            int[] _internal = set.Reference;
+            ntt[] head = set.Head;
 
             // Resize the array and preserve
             // the pinned aspect of the next array.
-            Helpers.ResizeArray(ref _internal, length, pinned: true);
+            Helpers.ResizeArray(ref head, length, pinned: true);
 
-#if DEBUG
-            Array.Fill(_internal, 0x0dead); 
-#endif
             // Write the new length of the
             // array to the header of the
             // buffer while preserving the
             // length of the dense set.
-            _internal[0] = Sparse.Write(_internal, -1, length - 1);
+            Sparse.Poke(head, -1, length - 1);
 
             // Overwrite the original set
             // from the caller with the data.
-            set = new SparseSet((int*)Unsafe.AsPointer(ref _internal[1]), _internal); ;
+            set = new SparseSet((ntt*)Unsafe.AsPointer(ref head[2]), head, head[1], head[0]);
         }
+
+        static int Fault() => throw new IndexOutOfRangeException();
     }
 }

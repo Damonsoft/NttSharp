@@ -30,6 +30,12 @@ namespace NttSharp.Logic
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T* MallocZeroed<T>(int size) where T : unmanaged
+        {
+            return (T*)NativeMemory.AllocZeroed((nuint)SizeOf<T>(size));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Free<T>(T* pointer) where T : unmanaged
         {
             NativeMemory.Free(pointer);
@@ -39,6 +45,12 @@ namespace NttSharp.Logic
         public static T* Resize<T>(T* pointer, int count) where T : unmanaged
         {
             return (T*)NativeMemory.Realloc(pointer, (nuint)SizeOf<T>(count));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T* Resize<T>(ref T* pointer, int count) where T : unmanaged
+        {
+            return pointer = (T*)NativeMemory.Realloc(pointer, (nuint)SizeOf<T>(count));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
